@@ -5,6 +5,8 @@ import tweepy
 
 from datetime import datetime as dt
 from tqdm import tqdm
+from redis import Redis
+from rq import Queue
 
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -17,6 +19,9 @@ from sqlalchemy.ext.declarative import declarative_base
 # TODO: Rotate keys, etc.
 TWITTER_TOKEN = os.environ.get('TWITTER_TOKEN')
 TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
+
+
+queue = Queue(connection=Redis())
 
 
 def connect_db(db_path):
@@ -63,8 +68,8 @@ class Follower(BaseModel):
     __tablename__ = 'follower'
     id = Column(Integer, primary_key=True)
     screen_name = Column(String, nullable=False)
-    follower_id = Column(Integer, nullable=False)
     job_timestamp = Column(Integer, nullable=False)
+    follower_id = Column(Integer, nullable=False)
 
     @classmethod
     def insert_ids(cls, screen_name, ids, start):
@@ -73,8 +78,8 @@ class Follower(BaseModel):
         rows = [
             dict(
                 screen_name=screen_name,
-                follower_id=id,
                 job_timestamp=start,
+                follower_id=id,
             )
             for id in ids
         ]

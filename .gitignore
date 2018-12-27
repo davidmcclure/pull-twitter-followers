@@ -106,3 +106,4 @@ venv.bak/
 /data
 *.db
 *.db-journal
+*.txt

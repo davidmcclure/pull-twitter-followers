@@ -11,6 +11,7 @@ click = "*"
 sqlalchemy = "*"
 "flake8" = "*"
 tqdm = "*"
+invoke = "*"
 
 [dev-packages]
 
