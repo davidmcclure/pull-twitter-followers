@@ -1,8 +1,10 @@
 
 
 import os
+import tweepy
 
 from datetime import datetime as dt
+from tqdm import tqdm
 
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -10,6 +12,11 @@ from sqlalchemy import create_engine
 
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
+
+
+# TODO: Rotate keys, etc.
+TWITTER_TOKEN = os.environ.get('TWITTER_TOKEN')
+TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
 
 
 def connect_db(db_path):
@@ -56,5 +63,43 @@ class Follower(BaseModel):
     __tablename__ = 'follower'
     id = Column(Integer, primary_key=True)
     screen_name = Column(String, nullable=False)
-    follower_id = Column(String, nullable=False)
-    timestamp = Column(Integer, nullable=False)
+    follower_id = Column(Integer, nullable=False)
+    job_timestamp = Column(Integer, nullable=False)
+
+    @classmethod
+    def insert_ids(cls, screen_name, ids, start):
+        """Bulk-insert ids.
+        """
+        rows = [
+            dict(
+                screen_name=screen_name,
+                follower_id=id,
+                job_timestamp=start,
+            )
+            for id in ids
+        ]
+
+        session.bulk_insert_mappings(cls, rows)
+
+
+def pull_followers(screen_name):
+    """Pull all follwers for an account.
+    """
+    start = utc_timestamp()
+
+    auth = tweepy.AppAuthHandler(TWITTER_TOKEN, TWITTER_SECRET)
+
+    api = tweepy.API(
+        auth,
+        wait_on_rate_limit=True,
+        wait_on_rate_limit_notify=True,
+        retry_count=10,
+        retry_delay=10,
+    )
+
+    cursor = tweepy.Cursor(api.followers_ids, screen_name=screen_name)
+
+    for ids in tqdm(cursor.pages()):
+        Follower.insert_ids(screen_name, ids, start)
+
+    session.commit()

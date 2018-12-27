@@ -10,6 +10,7 @@ tweepy = "*"
 click = "*"
 sqlalchemy = "*"
 "flake8" = "*"
+tqdm = "*"
 
 [dev-packages]
 
