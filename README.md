@@ -15,10 +15,10 @@ This repo just:
     CREATE TABLE follower (
     	id INTEGER NOT NULL,
     	screen_name VARCHAR NOT NULL,
-    	follower_id VARCHAR NOT NULL,
-    	timestamp INTEGER NOT NULL,
+    	job_timestamp INTEGER NOT NULL,
+    	follower_id INTEGER NOT NULL,
     	PRIMARY KEY (id)
     );
     ```
 
-    Where `timestamp` is the same for all rows harvested during a given cursor iteration. (The time the job started.) This makes it's possible to repeatedly snapshot the same account(s) at different points in time.
+    Where `job_timestamp` is the same for all rows harvested during a given cursor iteration. (The time the job started.) This makes it's possible to repeatedly snapshot the same account(s) at different points in time.
