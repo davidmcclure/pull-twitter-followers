@@ -21,4 +21,4 @@ This repo just:
     );
     ```
 
-    Where `timestamp` is the same for all rows harvested during a given cursor iteration. (The time the job started.) This means that it's possible to repeatedly snapshot the same set of accounts over time, and store everything in the same place.
+    Where `timestamp` is the same for all rows harvested during a given cursor iteration. (The time the job started.) This means that it's possible to repeatedly snapshot the same set of accounts at different points in time, and store everything in the same place.
