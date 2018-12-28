@@ -26,7 +26,15 @@ This repo just:
 ## Setup
 
 1. Install Redis and pipenv.
+
 1. Clone this repo, `pipenv install`, `pipenv shell`.
+
+1. Set your Twitter account credentials as ENV vars:
+
+    ```bash
+    export TWITTER_TOKEN=XXX
+    export TWITTER_SECRET=XXX
+    ```
 
 ## Usage
 
