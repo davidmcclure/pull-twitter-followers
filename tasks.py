@@ -18,5 +18,5 @@ def spool(c, sn_src):
     """
     with open(sn_src) as fh:
         for sn in fh.read().splitlines():
-            queue.enqueue(pull_followers, sn)
+            queue.enqueue(pull_followers, sn, timeout='10h')
             print(sn)

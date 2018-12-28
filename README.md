@@ -29,7 +29,7 @@ This repo just:
 
 1. Clone this repo, **`pipenv install`**, **`pipenv shell`**.
 
-1. Set your Twitter account credentials as ENV vars:
+1. Set your Twitter API credentials as ENV vars:
 
     ```bash
     export TWITTER_TOKEN=XXX
