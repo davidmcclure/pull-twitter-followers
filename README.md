@@ -7,7 +7,7 @@ This repo just:
 
 - Each account that you want to harvest gets pushed into a Redis-backed [RQ](http://python-rq.org/) queue.
 
-- The worker pops a screen name, and starts cursoring out the follower list from the Twitter API. When this finishes, the list is committed as a batch of rows to a local SQLite database in a single transaction. This way, you never have an incomplete follower list for an account.
+- The worker pops a screen name, and starts cursoring out the follower list from the Twitter API. When this finishes, the list is committed as a batch of rows to a local [SQLite](https://www.sqlite.org/index.html) database in a single transaction. This way, you never have an incomplete follower list for an account.
 
 - In the database, each follower looks like:
 
@@ -25,7 +25,7 @@ This repo just:
 
 ## Setup
 
-1. Install Redis and pipenv.
+1. Install [Redis](https://redis.io/) and [pipenv](https://pipenv.readthedocs.io/en/latest/).
 
 1. Clone this repo, `pipenv install`, `pipenv shell`.
 
@@ -42,4 +42,4 @@ This repo just:
 
 1. Run the `spool` task to queue a job for each screen name: `inv spool <txt file>`
 
-1. Start a worker: `rq worker`. This will pull followers for all screen names in the queue. Data gets written to a `./followers.db` file.
+1. Start a worker: `rq worker`. Data flows to a `./followers.db` file.
