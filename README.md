@@ -1,13 +1,13 @@
 
 # Twitter follower harvester
 
-Pull follower ids for a set of Twitter users. If you want to harvest lots of accounts, or the accounts have lots of followers, this can take a long time, and it's easy for stuff to go wrong, which leaves you with incomplete data.
+Pull follower ids for a set of Twitter users. If you want to harvest lots of accounts (or the accounts have lots of followers) this can take a long time, and it's easy for stuff to go wrong, which leaves you with incomplete data.
 
 This repo just:
 
-- Each account that you want to harvest gets pushed into a Redis-backed RQ queue.
+- Each account that you want to harvest gets pushed into a Redis-backed [RQ](http://python-rq.org/) queue.
 
-- The worker pops a screen names, and starts cursoring out the follower list from the Twitter API. When this finishes, the list is committed as a batch of rows to a local SQLite database in a single transaction. This way, you never have an incomplete follower list for an account.
+- The worker pops a screen name, and starts cursoring out the follower list from the Twitter API. When this finishes, the list is committed as a batch of rows to a local SQLite database in a single transaction. This way, you never have an incomplete follower list for an account.
 
 - In the database, each follower looks like:
 
@@ -22,3 +22,16 @@ This repo just:
     ```
 
     Where `job_timestamp` is the same for all rows harvested during a given cursor iteration. (The time the job started.) This makes it's possible to repeatedly snapshot the same account(s) at different points in time.
+
+## Setup
+
+1. Install Redis and pipenv.
+1. Clone this repo, `pipenv install`, `pipenv shell`.
+
+## Usage
+
+1. Put the screen names of the accounts you want to harvest into a text file, which can sit anywhere.
+
+1. Run the `spool` task to queue a job for each screen name: `inv spool <txt file>`
+
+1. Start a worker: `rq worker`. This will pull followers for all screen names in the queue. Data gets written to a `./followers.db` file.
